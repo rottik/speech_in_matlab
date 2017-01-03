@@ -1,0 +1,15 @@
+function euklid = Euklid(Y,R,P)
+    euklid=0;
+    if(length(Y)==length(R))
+        for i=1:length(Y)
+            s=0;
+            for j=1:P
+                s=s+(Y(i,j)-R(j))^2;
+            end            
+            euklid=euklid+sqrt(s);
+        end
+    else
+        disp('proved ltw');
+    end
+    
+end

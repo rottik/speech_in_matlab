@@ -1,0 +1,7 @@
+function euLength = EuklidVzdalenost(x,r,P,indexi,indexJ)
+    s=0;
+    for j=1:P
+        s=s+(x(indexj,indexI)-r(indexj,indexI))^2;
+    end            
+    euLength=sqrt(s);
+end

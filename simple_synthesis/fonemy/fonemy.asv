@@ -1,0 +1,33 @@
+clear all;
+clc;
+
+string = 'ocel_le';
+
+for i=1:length(string)
+    tmp=string(i);
+    if(string(i)==' ')
+        tmp='_';
+    end
+    if(string(i)=='C') %dz
+        tmp='cc';
+    end
+    if(string(i)=='È') %dž
+        tmp='èè';
+    end
+    if(string(i)=='E') %
+        tmp='ee';
+    end
+    if(string(i)=='M')
+        tmp='mm';
+    end
+    if(string(i)=='N')
+        tmp='nn';
+    end
+    if(string(i)=='Ø')
+        tmp='øø';
+    end
+    tmp
+    cesta=strcat(tmp,'.wav');
+    [Y,Fs,NBITS]=wavread(cesta);
+    wavplay(Y,Fs);
+end

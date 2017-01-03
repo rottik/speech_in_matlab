@@ -1,0 +1,13 @@
+function normovane=mahalanobis(parametry)
+     rozmery=size(parametry);
+     normovane=zeros(rozmery(1),rozmery(2));
+     prumery=zeros(1,rozmery(1));
+     %vypocist prumery parametru
+     for p=1:rozmery(1)
+        prumery(p)=mean(parametry(p,:));
+     end
+     %vypocist rozptyly
+     rozptyly=zeros(1,rozmery(1));
+     
+     
+end

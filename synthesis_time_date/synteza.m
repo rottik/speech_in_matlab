@@ -1,0 +1,11 @@
+clc;
+clear all;
+
+cas=clock;
+minuty=cas(5)
+hodiny=cas(4)
+den=cas(3);
+mesic=cas(2);
+rok=cas(1);
+prehrajDatum(den, mesic,rok);
+prehrajCasPoDatu(hodiny,minuty);

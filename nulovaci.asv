@@ -1,0 +1,10 @@
+x=1:8000;
+Nulovaci=zeros(1,8000);
+omg1=0;
+omg2=pi;
+N=10;
+for i=1:8000
+    Nulovaci(i)=(omg2/pi)*sinc((omg2*((i-1)-0.5*N))/pi)-(omg1/pi)*sinc((omg1*((i-1)-0.5*N))/pi);
+end
+
+plot(Nulovaci);

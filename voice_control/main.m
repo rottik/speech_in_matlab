@@ -1,0 +1,121 @@
+clear all;
+clc;
+h = actxserver('WScript.Shell');
+h.Run('MediaPortal');
+pocetprikazu=11;
+reference=['a-MR.wav';'b-MR.wav'];
+warning off all;
+disp('vytvarim slovnik');
+t1=clock;
+rozptyly=trenuj(reference,pocetprikazu);   %trenuj reference
+t2=clock;
+time=etime(t2,t1);
+disp(strcat('slovnik vytvoren za',' ',int2str(time),' s'));
+pause(10);
+h.AppActivate('MediaPortal');
+sr=size(rozptyly);
+vzdalenost=zeros(sr(1),pocetprikazu);
+pokracuj=1;
+aktivni=1;
+Fs=8000;
+[beep,FsBeep]=wavread('beep.wav');
+beep=beep*0.5;
+while pokracuj==1  
+    %nahraj neznamy, analyzuj ho
+    if (aktivni==1)
+        wavplay(beep,FsBeep);
+    end;
+    clear Y;
+    Y=wavrecord(2*Fs,Fs);
+    %[Y,Fs]=wavread('vybrat.wav'); 
+    clear neznamy;
+    [neznamy,zvuk]=parametry(Y);        
+    %wavplay(zvuk,Fs);
+    YY=neznamy;
+    for koncovka=1:sr(1)
+        rozmery=size(neznamy);
+        for p=1:sr(2)
+            YY(p,:)=neznamy(p,:)*rozptyly(koncovka,p);
+        end
+        for i=1:pocetprikazu
+            load (strcat(int2str(i),reference(koncovka,:),'.mat')); %ziskam promenou ref    
+            rozmery=size(ref);
+            P=rozmery(1);
+            vzdalenost(koncovka,i)=ComputeDTWitakuta(ref,YY,P);
+        end
+    end
+    %% vyhledej nejmensi velikost
+    nejmensi=inf;
+    index=1;
+    sada=1;
+    for r=1:sr(1)
+        for i=1:pocetprikazu
+            if(nejmensi>vzdalenost(r,i))
+                index=i;
+                sada=r;
+                nejmensi=vzdalenost(r,i);
+            end
+        end
+    end
+    %stem(vzdalenost);
+    %%
+    %disp(index);
+    if aktivni==1
+        switch index
+            case 1, 
+                disp('sum');
+            case 2,
+                h.SendKeys('{UP}');
+                disp('up');
+            case 3,
+                h.SendKeys('{DOWN}');
+                disp('down');
+            case 4,
+                h.SendKeys('{RIGHT}');
+                disp('right');
+            case 5,
+                h.SendKeys('{LEFT}');
+                disp('left');
+            case 6,
+                h.SendKeys('{ENTER}');
+                disp('enter');
+            case 7,
+                h.SendKeys('{ESC}');
+                disp('esc');
+            case 8,
+                aktivni=0;
+                disp('deaktivuj');
+            case 9,
+                disp('aktivuj');
+            case 10,
+                h.SendKeys('l');
+                disp('L');
+%             case 11,
+%                 %h.SendKeys('M');
+%                 disp('M');
+%             case 12,
+%                 %h.SendKeys('S');
+%                 disp('S');
+%             case 13,
+%                 %h.SendKeys('-');
+%                 disp('-');
+%             case 14,
+%                 %h.SendKeys('=');
+%                 disp('+');
+             case 11,
+                 h.SendKeys('(%{F4})');pokracuj=0;
+                 disp('alt+f4');
+%             case 16,
+%                 aktivni=0;
+%                 disp('deaktivuj');
+            otherwise, disp('sum');            
+        end
+    else % deaktivovany system
+       switch index
+           case 9,
+               aktivni=1;
+               disp('aktivuj');
+           otherwise, disp('neaktivni');
+       end
+    end
+end

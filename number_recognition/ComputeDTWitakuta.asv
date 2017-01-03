@@ -1,0 +1,65 @@
+function [D] = ComputeDTWitakuta(R,Y,P)
+%clc;clear all;;
+%     R=[2 5 2 6 2 1];
+%     Y=[1 4 5 2 3 7 6 1];
+%     P=1;
+   if(length(R)>2*length(Y) || length(Y)>2*length(R) )
+        D=inf;
+        return;
+   end
+    newA=zeros(length(R)+2,1);
+    oldA=newA;
+    B=zeros(length(R)+2,1);
+    %% inicializace matice
+    %1. sloupec inf, 1. a 2. radek inf
+    %skutecny j zacina na indexu 3
+    newA(3)=EuklidVzdalenost(Y,R,P,1,3);
+    for j=1:length(R)+2
+        if (j~=3)
+            newA(j)=inf;
+        end
+        B(j)=0;
+    end
+    %% vlastni vypocet
+    for i=2:length(Y)
+        oldA=newA;
+        %% zjisteni mezi
+        min=(i-1)/2;
+        min=min-mod(min,1);
+        k1=length(R)-(length(Y)-i)*2;
+        if min<k1
+            min=k1;
+        end
+        min=min+2+1;
+        k1=2*i-1;
+        max=length(R)-(length(Y)-i)/2;
+        max=max-mod(max,1);
+        if max > k1
+            max=k1;
+        end
+        max=max+2+1;
+        if(
+        %%
+        for j=max+2:-1:min
+            if oldA(j-1) < oldA(j-2)
+                o=oldA(j-1);
+                b=j-1;
+            else
+                o=oldA(j-2);
+                b=j-2;
+            end 
+            if B(j)~=j
+               if oldA(j)<o
+                   o=oldA(j);
+                   b=j;
+               end
+            end
+        B(j)=b;
+        newA(j)=EuklidVzdalenost(Y,R,P,i,j-2)+o;
+        end
+        newA(2)=inf;
+        newA(1)=inf;
+    end
+    %% vyhodnoceni
+    D=newA(length(R)+2);
+%end
